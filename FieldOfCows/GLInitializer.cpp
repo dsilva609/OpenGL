@@ -16,17 +16,18 @@ static int currentHeight;
 static unsigned frameCount;
 static int dataSize;
 static int numVertices;
-static int icoVerts;
+//static int icoVerts;
 static int fieldVerts;
-static int fenceVerts;
+static int fenceBeamVerts;
+static int fenceRotatedVerts;
 static float rotationAngle;
 
 static GLuint programID;
 static GLuint MatrixID;
-static GLuint VertexArrayID[4];
-static GLuint offsetsBufferID[4];
-static GLuint vertexbuffer[4];
-static GLuint colorbuffer[4];
+static GLuint VertexArrayID[5];
+static GLuint offsetsBufferID[5];
+static GLuint vertexbuffer[5];
+static GLuint colorbuffer[5];
 
 static mat4 MVP;
 static mat4 Projection;
@@ -149,18 +150,18 @@ private:
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
+		//glEnableVertexAttribArray(0);
+		//glEnableVertexAttribArray(1);
+		//glEnableVertexAttribArray(2);
 
-		glBindVertexArray(VertexArrayID[1]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
-		//draw ico fence
-		glDrawArraysInstanced(GL_TRIANGLES, 0, icoVerts / 3, 52);
+		//glBindVertexArray(VertexArrayID[1]);
+		//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+		////draw ico fence
+		//glDrawArraysInstanced(GL_TRIANGLES, 0, icoVerts / 3, 52);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
+		//glDisableVertexAttribArray(0);
+		//glDisableVertexAttribArray(1);
+		//glDisableVertexAttribArray(2);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -181,7 +182,19 @@ private:
 		//draw fence
 		glBindVertexArray(VertexArrayID[3]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
-		glDrawArrays(GL_TRIANGLES, 0, fenceVerts / 3);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, fenceBeamVerts / 3, 2);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		//draw fence
+		glBindVertexArray(VertexArrayID[4]);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[4]);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, fenceRotatedVerts / 3, 2);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_3D);
 
 
@@ -374,7 +387,7 @@ private:
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
-		ObjectParser icoParser;
+		/*ObjectParser icoParser;
 
 		vector<GLfloat> ico = icoParser.Execute("ico.obj");
 
@@ -395,67 +408,67 @@ private:
 
 
 		GLfloat fenceOffsets[][3] = {
-				{ 60.0f, 0.0f, -50.0f },
-				{ 50.0f, 0.0f, -50.0f },
-				{ 40.0f, 0.0f, -50.0f },
-				{ 30.0f, 0.0f, -50.0f },
-				{ 20.0f, 0.0f, -50.0f },
-				{ 10.0f, 0.0f, -50.0f },
-				{ 0.0f, 0.0f, -50.0f },
-				{ -10.0f, 0.0f, -50.0f },
-				{ -20.0f, 0.0f, -50.0f },
-				{ -30.0f, 0.0f, -50.0f },
-				{ -40.0f, 0.0f, -50.0f },
-				{ -50.0f, 0.0f, -50.0f },
-				{ -60.0f, 0.0f, -50.0f },
+		{ 60.0f, 0.0f, -50.0f },
+		{ 50.0f, 0.0f, -50.0f },
+		{ 40.0f, 0.0f, -50.0f },
+		{ 30.0f, 0.0f, -50.0f },
+		{ 20.0f, 0.0f, -50.0f },
+		{ 10.0f, 0.0f, -50.0f },
+		{ 0.0f, 0.0f, -50.0f },
+		{ -10.0f, 0.0f, -50.0f },
+		{ -20.0f, 0.0f, -50.0f },
+		{ -30.0f, 0.0f, -50.0f },
+		{ -40.0f, 0.0f, -50.0f },
+		{ -50.0f, 0.0f, -50.0f },
+		{ -60.0f, 0.0f, -50.0f },
 
-				{ 60.0f, 0.0f, -40.0f },
-				{ 60.0f, 0.0f, -30.0f },
-				{ 60.0f, 0.0f, -20.0f },
-				{ 60.0f, 0.0f, -10.0f },
-				{ 60.0f, 0.0f, 0.0f },
-				{ 60.0f, 0.0f, 10.0f },
-				{ 60.0f, 0.0f, 20.0f },
-				{ 60.0f, 0.0f, 30.0f },
-				{ 60.0f, 0.0f, 40.0f },
-				{ 60.0f, 0.0f, 50.0f },
-				{ 60.0f, 0.0f, 60.0f },
-				{ 60.0f, 0.0f, 70.0f },
-				{ 60.0f, 0.0f, 80.0f },
+		{ 60.0f, 0.0f, -40.0f },
+		{ 60.0f, 0.0f, -30.0f },
+		{ 60.0f, 0.0f, -20.0f },
+		{ 60.0f, 0.0f, -10.0f },
+		{ 60.0f, 0.0f, 0.0f },
+		{ 60.0f, 0.0f, 10.0f },
+		{ 60.0f, 0.0f, 20.0f },
+		{ 60.0f, 0.0f, 30.0f },
+		{ 60.0f, 0.0f, 40.0f },
+		{ 60.0f, 0.0f, 50.0f },
+		{ 60.0f, 0.0f, 60.0f },
+		{ 60.0f, 0.0f, 70.0f },
+		{ 60.0f, 0.0f, 80.0f },
 
-				{ 60.0f, 0.0f, 80.0f },
-				{ 50.0f, 0.0f, 80.0f },
-				{ 40.0f, 0.0f, 80.0f },
-				{ 30.0f, 0.0f, 80.0f },
-				{ 20.0f, 0.0f, 80.0f },
-				{ 10.0f, 0.0f, 80.0f },
-				{ 0.0f, 0.0f, 80.0f },
-				{ -10.0f, 0.0f, 80.0f },
-				{ -20.0f, 0.0f, 80.0f },
-				{ -30.0f, 0.0f, 80.0f },
-				{ -40.0f, 0.0f, 80.0f },
-				{ -50.0f, 0.0f, 80.0f },
-				{ -60.0f, 0.0f, 80.0f },
+		{ 60.0f, 0.0f, 80.0f },
+		{ 50.0f, 0.0f, 80.0f },
+		{ 40.0f, 0.0f, 80.0f },
+		{ 30.0f, 0.0f, 80.0f },
+		{ 20.0f, 0.0f, 80.0f },
+		{ 10.0f, 0.0f, 80.0f },
+		{ 0.0f, 0.0f, 80.0f },
+		{ -10.0f, 0.0f, 80.0f },
+		{ -20.0f, 0.0f, 80.0f },
+		{ -30.0f, 0.0f, 80.0f },
+		{ -40.0f, 0.0f, 80.0f },
+		{ -50.0f, 0.0f, 80.0f },
+		{ -60.0f, 0.0f, 80.0f },
 
-				{ -60.0f, 0.0f, -50.0f },
-				{ -60.0f, 0.0f, -40.0f },
-				{ -60.0f, 0.0f, -30.0f },
-				{ -60.0f, 0.0f, -20.0f },
-				{ -60.0f, 0.0f, -10.0f },
-				{ -60.0f, 0.0f, 0.0f },
-				{ -60.0f, 0.0f, 10.0f },
-				{ -60.0f, 0.0f, 20.0f },
-				{ -60.0f, 0.0f, 30.0f },
-				{ -60.0f, 0.0f, 40.0f },
-				{ -60.0f, 0.0f, 50.0f },
-				{ -60.0f, 0.0f, 60.0f },
-				{ -60.0f, 0.0f, 70.0f },
+		{ -60.0f, 0.0f, -50.0f },
+		{ -60.0f, 0.0f, -40.0f },
+		{ -60.0f, 0.0f, -30.0f },
+		{ -60.0f, 0.0f, -20.0f },
+		{ -60.0f, 0.0f, -10.0f },
+		{ -60.0f, 0.0f, 0.0f },
+		{ -60.0f, 0.0f, 10.0f },
+		{ -60.0f, 0.0f, 20.0f },
+		{ -60.0f, 0.0f, 30.0f },
+		{ -60.0f, 0.0f, 40.0f },
+		{ -60.0f, 0.0f, 50.0f },
+		{ -60.0f, 0.0f, 60.0f },
+		{ -60.0f, 0.0f, 70.0f },
 		};
 		glGenBuffers(1, &offsetsBufferID[1]);
 		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[1]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribDivisor(2, 1);
+		glVertexAttribDivisor(2, 1);*/
 
 		ObjectParser fieldParser;
 
@@ -484,23 +497,26 @@ private:
 		glBufferData(GL_ARRAY_BUFFER, sizeof(fieldColors), fieldColors, GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-		glGenBuffers(1, &offsetsBufferID[2]);
-		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[2]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
+		GLfloat fieldOffsets[][3] = {
+				{ 60.0f, 0.0f, -50.0f }
+		};
+		glGenBuffers(1, &offsetsBufferID[1]);
+		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[1]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fieldOffsets) * sizeof(GLfloat), fieldOffsets, GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
 		ObjectParser fenceParser;
 
-		vector<GLfloat> fence = fenceParser.Execute("fence.obj");
-		fenceVerts = fence.size();
+		vector<GLfloat> fenceBeams = fenceParser.Execute("fenceBeams.obj");
+		fenceBeamVerts = fenceBeams.size();
 
 		glGenVertexArrays(1, &VertexArrayID[3]);
 		glBindVertexArray(VertexArrayID[3]);
 
 		glGenBuffers(1, vertexbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, fenceVerts * sizeof(GLfloat), fence.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, fenceBeamVerts * sizeof(GLfloat), fenceBeams.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		GLfloat fenceColors[] = {
@@ -518,12 +534,43 @@ private:
 		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceColors), fenceColors, GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+		GLfloat fenceBeamOffsets[][3] = {
+				{ 60.0f, -5.0f, 80.0f },
+				{ 60.0f, -5.0f, -50.0f }
+		};
 		glGenBuffers(1, &offsetsBufferID[3]);
 		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[3]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceBeamOffsets), fenceBeamOffsets, GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		//	glVertexAttribDivisor(2, 1);
+		glVertexAttribDivisor(2, 1);
 
+		ObjectParser fenceRotatedParser;
+
+		vector<GLfloat> fenceBeamsRotated = fenceRotatedParser.Execute("fenceBeamsRotated.obj");
+		fenceRotatedVerts = fenceBeamsRotated.size();
+
+		glGenVertexArrays(1, &VertexArrayID[4]);
+		glBindVertexArray(VertexArrayID[4]);
+
+		glGenBuffers(1, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
+		glBufferData(GL_ARRAY_BUFFER, fenceRotatedVerts * sizeof(GLfloat), fenceBeamsRotated.data(), GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &colorbuffer[4]);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[4]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceColors), fenceColors, GL_STATIC_DRAW);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		GLfloat fenceRotatedOffsets[][3] = {
+				{ -60.0f, -5.0f, 80.0f },
+				{ 60.0f, -5.0f, 80.0f }
+		};
+		glGenBuffers(1, &offsetsBufferID[4]);
+		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[4]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceRotatedOffsets), fenceRotatedOffsets, GL_STATIC_DRAW);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribDivisor(2, 1);
 	}
 
 	GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path)

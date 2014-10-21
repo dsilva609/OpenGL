@@ -45,16 +45,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="fence.obj">
+    <Object Include="fenceBeams.obj">
       <Filter>Resource Files</Filter>
     </Object>
-    <Object Include="field.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="ico.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="triangulatedCowNoNormals.obj">
+    <Object Include="fenceBeamsRotated.obj">
       <Filter>Resource Files</Filter>
     </Object>
   </ItemGroup>
