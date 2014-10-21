@@ -18,14 +18,15 @@ static int dataSize;
 static int numVertices;
 static int icoVerts;
 static int fieldVerts;
+static int fenceVerts;
 static float rotationAngle;
 
 static GLuint programID;
 static GLuint MatrixID;
-static GLuint VertexArrayID[3];
-static GLuint offsetsBufferID[3];
-static GLuint vertexbuffer[3];
-static GLuint colorbuffer[3];
+static GLuint VertexArrayID[4];
+static GLuint offsetsBufferID[4];
+static GLuint vertexbuffer[4];
+static GLuint colorbuffer[4];
 
 static mat4 MVP;
 static mat4 Projection;
@@ -154,7 +155,7 @@ private:
 
 		glBindVertexArray(VertexArrayID[1]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
-		//draw fence
+		//draw ico fence
 		glDrawArraysInstanced(GL_TRIANGLES, 0, icoVerts / 3, 52);
 
 		glDisableVertexAttribArray(0);
@@ -173,6 +174,14 @@ private:
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		//draw fence
+		glBindVertexArray(VertexArrayID[3]);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
+		glDrawArrays(GL_TRIANGLES, 0, fenceVerts / 3);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_3D);
 
 
@@ -448,16 +457,6 @@ private:
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
-		//GLfloat field[] = {
-		//	0.0f, -3.0f, 130.0f,
-		//	0.0f, -3.0f, 0.0f,
-		//	-120.0f, -3.0f, 130.0f,  // Triangle 0
-
-		//	-120.0f, -3.0f, 130.0f,
-		//	0.0f, -3.0f, 0.0f,
-		//	-120.0f, -3.0f, 0.0f  // Triangle 1
-		//};
-
 		ObjectParser fieldParser;
 
 		vector<GLfloat> field = fieldParser.Execute("field.obj");
@@ -487,9 +486,44 @@ private:
 
 		glGenBuffers(1, &offsetsBufferID[2]);
 		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[2]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);///////////////
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
+
+		ObjectParser fenceParser;
+
+		vector<GLfloat> fence = fenceParser.Execute("fence.obj");
+		fenceVerts = fence.size();
+
+		glGenVertexArrays(1, &VertexArrayID[3]);
+		glBindVertexArray(VertexArrayID[3]);
+
+		glGenBuffers(1, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
+		glBufferData(GL_ARRAY_BUFFER, fenceVerts * sizeof(GLfloat), fence.data(), GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		GLfloat fenceColors[] = {
+			0.647059f, 0.164706f, 0.164706f,
+			0.647059f, 0.164706f, 0.164706f,
+			0.647059f, 0.164706f, 0.164706f,
+
+			0.647059f, 0.164706f, 0.164706f,
+			0.647059f, 0.164706f, 0.164706f,
+			0.647059f, 0.164706f, 0.164706f
+		};
+
+		glGenBuffers(1, &colorbuffer[3]);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[3]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceColors), fenceColors, GL_STATIC_DRAW);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		glGenBuffers(1, &offsetsBufferID[3]);
+		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[3]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		//	glVertexAttribDivisor(2, 1);
+
 	}
 
 	GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
