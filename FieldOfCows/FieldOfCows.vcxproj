@@ -89,6 +89,12 @@
   <ItemGroup>
     <ClInclude Include="shader.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="fence.obj" />
+    <Object Include="field.obj" />
+    <Object Include="ico.obj" />
+    <Object Include="triangulatedCowNoNormals.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
