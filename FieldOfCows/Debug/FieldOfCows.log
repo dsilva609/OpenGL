@@ -1,0 +1,38 @@
+﻿  shader.cpp
+  ObjectParser.cpp
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(71): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(74): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(77): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(93): warning C4018: '<' : signed/unsigned mismatch
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(97): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(98): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(99): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+  Main.cpp
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(71): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(74): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(77): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(93): warning C4018: '<' : signed/unsigned mismatch
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(97): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(98): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(99): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\glinitializer.cpp(186): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\glinitializer.cpp(207): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'sprintf'
+  GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLInitializer.cpp
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(71): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(74): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(77): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(93): warning C4018: '<' : signed/unsigned mismatch
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(97): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(98): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(99): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\glinitializer.cpp(186): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+c:\gitsandbox\opengl\fieldofcows\glinitializer.cpp(207): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'sprintf'
+  GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  Generating Code...
+c:\gitsandbox\opengl\fieldofcows\objectparser.cpp(111): warning C4715: 'ObjectParser::Execute' : not all control paths return a value
+  FieldOfCows.vcxproj -> C:\GitSandbox\OpenGL\Debug\FieldOfCows.exe
