@@ -44,9 +44,4 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="fencePost.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-  </ItemGroup>
 </Project>
