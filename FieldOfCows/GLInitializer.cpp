@@ -17,6 +17,7 @@ static unsigned frameCount;
 static int dataSize;
 static int numVertices;
 static int icoVerts;
+static int fieldVerts;
 static float rotationAngle;
 
 static GLuint programID;
@@ -113,7 +114,7 @@ private:
 		glUseProgram(programID);
 
 		// Projection matrix : 90° Field of View, 16:9 ratio, display range : 0.1 unit <-> 150 units
-		Projection = glm::perspective(90.0f, 16.0f / 9.0f, 0.1f, 150.0f);
+		Projection = glm::perspective(90.0f, 16.0f / 9.0f, 0.1f, 200.0f);
 		// Camera matrix
 		View = glm::lookAt(
 			glm::vec3(100, 3, 0), // Camera is at (x, y, z), in World Space
@@ -166,7 +167,7 @@ private:
 		//draw field
 		glBindVertexArray(VertexArrayID[2]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 0, fieldVerts / 3);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -447,15 +448,20 @@ private:
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
-		GLfloat field[] = {
-			0.0f, -3.0f, 130.0f,
-			0.0f, -3.0f, 0.0f,
-			-120.0f, -3.0f, 130.0f,  // Triangle 0
+		//GLfloat field[] = {
+		//	0.0f, -3.0f, 130.0f,
+		//	0.0f, -3.0f, 0.0f,
+		//	-120.0f, -3.0f, 130.0f,  // Triangle 0
 
-			-120.0f, -3.0f, 130.0f,
-			0.0f, -3.0f, 0.0f,
-			-120.0f, -3.0f, 0.0f  // Triangle 1
-		};
+		//	-120.0f, -3.0f, 130.0f,
+		//	0.0f, -3.0f, 0.0f,
+		//	-120.0f, -3.0f, 0.0f  // Triangle 1
+		//};
+
+		ObjectParser fieldParser;
+
+		vector<GLfloat> field = fieldParser.Execute("field.obj");
+		fieldVerts = field.size();
 
 		GLfloat fieldColors[] = {
 			0.0f, 1.0f, 0.0f,
@@ -471,7 +477,7 @@ private:
 
 		glGenBuffers(1, vertexbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(field) * sizeof(GLfloat), field, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, fieldVerts * sizeof(GLfloat), field.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		glGenBuffers(1, &colorbuffer[2]);
