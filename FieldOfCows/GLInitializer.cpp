@@ -16,7 +16,7 @@ static int currentHeight;
 static unsigned frameCount;
 static int dataSize;
 static int numVertices;
-//static int icoVerts;
+static int fencePostVerts;
 static int fieldVerts;
 static int fenceBeamVerts;
 static int fenceRotatedVerts;
@@ -150,18 +150,18 @@ private:
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-		//glEnableVertexAttribArray(0);
-		//glEnableVertexAttribArray(1);
-		//glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 
-		//glBindVertexArray(VertexArrayID[1]);
-		//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
-		////draw ico fence
-		//glDrawArraysInstanced(GL_TRIANGLES, 0, icoVerts / 3, 52);
+		glBindVertexArray(VertexArrayID[1]);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+		//draw ico fence
+		glDrawArraysInstanced(GL_TRIANGLES, 0, fencePostVerts / 3, 52);
 
-		//glDisableVertexAttribArray(0);
-		//glDisableVertexAttribArray(1);
-		//glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -387,88 +387,126 @@ private:
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
-		/*ObjectParser icoParser;
+		ObjectParser fencePostParser;
 
-		vector<GLfloat> ico = icoParser.Execute("ico.obj");
+		vector<GLfloat> fencePosts = fencePostParser.Execute("fencePost.obj");
 
-		icoVerts = ico.size();
+		fencePostVerts = fencePosts.size();
 
 		glGenVertexArrays(1, &VertexArrayID[1]);
 		glBindVertexArray(VertexArrayID[1]);
 
 		glGenBuffers(1, vertexbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, icoVerts * sizeof(GLfloat), ico.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, fencePostVerts * sizeof(GLfloat), fencePosts.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+		GLfloat fencePostColors[] = {
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+		};
 
 		glGenBuffers(1, &colorbuffer[1]);
 		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[1]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(fencePostColors), fencePostColors, GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 
 		GLfloat fenceOffsets[][3] = {
-		{ 60.0f, 0.0f, -50.0f },
-		{ 50.0f, 0.0f, -50.0f },
-		{ 40.0f, 0.0f, -50.0f },
-		{ 30.0f, 0.0f, -50.0f },
-		{ 20.0f, 0.0f, -50.0f },
-		{ 10.0f, 0.0f, -50.0f },
-		{ 0.0f, 0.0f, -50.0f },
-		{ -10.0f, 0.0f, -50.0f },
-		{ -20.0f, 0.0f, -50.0f },
-		{ -30.0f, 0.0f, -50.0f },
-		{ -40.0f, 0.0f, -50.0f },
-		{ -50.0f, 0.0f, -50.0f },
-		{ -60.0f, 0.0f, -50.0f },
+				{ 60.0f, -3.0f, -50.0f },
+				{ 50.0f, -3.0f, -50.0f },
+				{ 40.0f, -3.0f, -50.0f },
+				{ 30.0f, -3.0f, -50.0f },
+				{ 20.0f, -3.0f, -50.0f },
+				{ 10.0f, -3.0f, -50.0f },
+				{ 0.0f, -3.0f, -50.0f },
+				{ -10.0f, -3.0f, -50.0f },
+				{ -20.0f, -3.0f, -50.0f },
+				{ -30.0f, -3.0f, -50.0f },
+				{ -40.0f, -3.0f, -50.0f },
+				{ -50.0f, -3.0f, -50.0f },
+				{ -60.0f, -3.0f, -50.0f },
 
-		{ 60.0f, 0.0f, -40.0f },
-		{ 60.0f, 0.0f, -30.0f },
-		{ 60.0f, 0.0f, -20.0f },
-		{ 60.0f, 0.0f, -10.0f },
-		{ 60.0f, 0.0f, 0.0f },
-		{ 60.0f, 0.0f, 10.0f },
-		{ 60.0f, 0.0f, 20.0f },
-		{ 60.0f, 0.0f, 30.0f },
-		{ 60.0f, 0.0f, 40.0f },
-		{ 60.0f, 0.0f, 50.0f },
-		{ 60.0f, 0.0f, 60.0f },
-		{ 60.0f, 0.0f, 70.0f },
-		{ 60.0f, 0.0f, 80.0f },
+				{ 60.0f, -3.0f, -40.0f },
+				{ 60.0f, -3.0f, -30.0f },
+				{ 60.0f, -3.0f, -20.0f },
+				{ 60.0f, -3.0f, -10.0f },
+				{ 60.0f, -3.0f, 0.0f },
+				{ 60.0f, -3.0f, 10.0f },
+				{ 60.0f, -3.0f, 20.0f },
+				{ 60.0f, -3.0f, 30.0f },
+				{ 60.0f, -3.0f, 40.0f },
+				{ 60.0f, -3.0f, 50.0f },
+				{ 60.0f, -3.0f, 60.0f },
+				{ 60.0f, -3.0f, 70.0f },
+				{ 60.0f, -3.0f, 80.0f },
 
-		{ 60.0f, 0.0f, 80.0f },
-		{ 50.0f, 0.0f, 80.0f },
-		{ 40.0f, 0.0f, 80.0f },
-		{ 30.0f, 0.0f, 80.0f },
-		{ 20.0f, 0.0f, 80.0f },
-		{ 10.0f, 0.0f, 80.0f },
-		{ 0.0f, 0.0f, 80.0f },
-		{ -10.0f, 0.0f, 80.0f },
-		{ -20.0f, 0.0f, 80.0f },
-		{ -30.0f, 0.0f, 80.0f },
-		{ -40.0f, 0.0f, 80.0f },
-		{ -50.0f, 0.0f, 80.0f },
-		{ -60.0f, 0.0f, 80.0f },
+				{ 60.0f, -3.0f, 80.0f },
+				{ 50.0f, -3.0f, 80.0f },
+				{ 40.0f, -3.0f, 80.0f },
+				{ 30.0f, -3.0f, 80.0f },
+				{ 20.0f, -3.0f, 80.0f },
+				{ 10.0f, -3.0f, 80.0f },
+				{ 0.0f, -3.0f, 80.0f },
+				{ -10.0f, -3.0f, 80.0f },
+				{ -20.0f, -3.0f, 80.0f },
+				{ -30.0f, -3.0f, 80.0f },
+				{ -40.0f, -3.0f, 80.0f },
+				{ -50.0f, -3.0f, 80.0f },
+				{ -60.0f, -3.0f, 80.0f },
 
-		{ -60.0f, 0.0f, -50.0f },
-		{ -60.0f, 0.0f, -40.0f },
-		{ -60.0f, 0.0f, -30.0f },
-		{ -60.0f, 0.0f, -20.0f },
-		{ -60.0f, 0.0f, -10.0f },
-		{ -60.0f, 0.0f, 0.0f },
-		{ -60.0f, 0.0f, 10.0f },
-		{ -60.0f, 0.0f, 20.0f },
-		{ -60.0f, 0.0f, 30.0f },
-		{ -60.0f, 0.0f, 40.0f },
-		{ -60.0f, 0.0f, 50.0f },
-		{ -60.0f, 0.0f, 60.0f },
-		{ -60.0f, 0.0f, 70.0f },
+				{ -60.0f, -3.0f, -50.0f },
+				{ -60.0f, -3.0f, -40.0f },
+				{ -60.0f, -3.0f, -30.0f },
+				{ -60.0f, -3.0f, -20.0f },
+				{ -60.0f, -3.0f, -10.0f },
+				{ -60.0f, -3.0f, 0.0f },
+				{ -60.0f, -3.0f, 10.0f },
+				{ -60.0f, -3.0f, 20.0f },
+				{ -60.0f, -3.0f, 30.0f },
+				{ -60.0f, -3.0f, 40.0f },
+				{ -60.0f, -3.0f, 50.0f },
+				{ -60.0f, -3.0f, 60.0f },
+				{ -60.0f, -3.0f, 70.0f },
 		};
 		glGenBuffers(1, &offsetsBufferID[1]);
 		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[1]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribDivisor(2, 1);*/
+		glVertexAttribDivisor(2, 1);
 
 		ObjectParser fieldParser;
 
@@ -476,13 +514,13 @@ private:
 		fieldVerts = field.size();
 
 		GLfloat fieldColors[] = {
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
+			0.184314f, 0.309804f, 0.184314f,
+			0.184314f, 0.309804f, 0.184314f,
+			0.184314f, 0.309804f, 0.184314f,
 
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f
+			0.184314f, 0.309804f, 0.184314f,
+			0.184314f, 0.309804f, 0.184314f,
+			0.184314f, 0.309804f, 0.184314f
 		};
 		glGenVertexArrays(1, &VertexArrayID[2]);
 		glBindVertexArray(VertexArrayID[2]);
@@ -520,13 +558,69 @@ private:
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		GLfloat fenceColors[] = {
-			0.647059f, 0.164706f, 0.164706f,
-			0.647059f, 0.164706f, 0.164706f,
-			0.647059f, 0.164706f, 0.164706f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
 
-			0.647059f, 0.164706f, 0.164706f,
-			0.647059f, 0.164706f, 0.164706f,
-			0.647059f, 0.164706f, 0.164706f
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
+			0.35f, 0.16f, 0.14f,
 		};
 
 		glGenBuffers(1, &colorbuffer[3]);

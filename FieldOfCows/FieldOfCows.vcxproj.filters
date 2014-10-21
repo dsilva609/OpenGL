@@ -45,10 +45,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="fenceBeams.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="fenceBeamsRotated.obj">
+    <Object Include="fencePost.obj">
       <Filter>Resource Files</Filter>
     </Object>
   </ItemGroup>

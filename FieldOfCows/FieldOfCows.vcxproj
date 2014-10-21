@@ -90,8 +90,7 @@
     <ClInclude Include="shader.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="fenceBeams.obj" />
-    <Object Include="fenceBeamsRotated.obj" />
+    <Object Include="fencePost.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
