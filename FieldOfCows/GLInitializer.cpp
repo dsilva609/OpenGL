@@ -75,6 +75,7 @@ public:
 		// Get a handle for our "MVP" uniform
 		MatrixID = glGetUniformLocation(programID, "MVP");
 
+
 		// Our ModelViewProjection : multiplication of our 3 matrices
 		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
@@ -171,7 +172,7 @@ private:
 		glFlush();
 	}
 
-	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, GLfloat angle, GLfloat color1, GLfloat color2, GLfloat color3)
+	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, float angle, GLfloat color1, GLfloat color2, GLfloat color3)
 	{
 		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		//MVP = Projection * View * Model;
@@ -191,7 +192,8 @@ private:
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
 		color = glGetUniformLocation(programID, "fragmentColor");
-		glProgramUniform3f(programID, color, color1, color2, color3);
+
+		glUniform3f(color, color1, color2, color3);
 
 		glDrawArraysInstanced(GL_TRIANGLES, 0, vertices / 3, numObjects);
 
