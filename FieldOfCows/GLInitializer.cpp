@@ -64,6 +64,20 @@ public:
 
 		cout << "OpenGL Version : " << glGetString(GL_VERSION) << endl;
 
+		// Enable depth test
+		glEnable(GL_DEPTH_TEST);
+		// Accept fragment if it closer to the camera than the former one
+		glDepthFunc(GL_LESS);
+
+		// Create and compile our GLSL program from the shaders
+		programID = LoadShaders(vertexShaderFilename, fragmentShaderFilename);
+
+		// Get a handle for our "MVP" uniform
+		MatrixID = glGetUniformLocation(programID, "MVP");
+
+		// Our ModelViewProjection : multiplication of our 3 matrices
+		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
+
 		CreateVAO(objectFilename, vertexShaderFilename, fragmentShaderFilename);
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -114,8 +128,11 @@ private:
 
 	static void RenderFunction(void)
 	{
+
 		frameCount++;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 
 		// Use our shader
 		glUseProgram(programID);
@@ -225,23 +242,10 @@ private:
 
 	void CreateVAO(string objectFilename, const char*  vertexShaderFilename, const char* fragmentShaderFilename)
 	{
-		// Enable depth test
-		glEnable(GL_DEPTH_TEST);
-		// Accept fragment if it closer to the camera than the former one
-		glDepthFunc(GL_LESS);
 
 		//VertexArrayID;
 		glGenVertexArrays(1, &VertexArrayID[0]);
 		glBindVertexArray(VertexArrayID[0]);
-
-		// Create and compile our GLSL program from the shaders
-		programID = LoadShaders(vertexShaderFilename, fragmentShaderFilename);
-
-		// Get a handle for our "MVP" uniform
-		MatrixID = glGetUniformLocation(programID, "MVP");
-
-		// Our ModelViewProjection : multiplication of our 3 matrices
-		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
 		ObjectParser parser;
 
