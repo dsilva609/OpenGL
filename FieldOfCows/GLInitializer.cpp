@@ -78,7 +78,7 @@ public:
 		// Our ModelViewProjection : multiplication of our 3 matrices
 		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
-		CreateVAO(objectFilename, vertexShaderFilename, fragmentShaderFilename);
+		CreateVAO(objectFilename);
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glMatrixMode(GL_MODELVIEW);
@@ -240,9 +240,8 @@ private:
 		glutTimerFunc(250, TimerFunction, 1);
 	}
 
-	void CreateVAO(string objectFilename, const char*  vertexShaderFilename, const char* fragmentShaderFilename)
+	void CreateVAO(string objectFilename)
 	{
-
 		//VertexArrayID;
 		glGenVertexArrays(1, &VertexArrayID[0]);
 		glBindVertexArray(VertexArrayID[0]);
