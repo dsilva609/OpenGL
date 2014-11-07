@@ -35,6 +35,10 @@ static mat4 Projection;
 static mat4 View;
 static mat4 Model;
 
+static mat4 Rotation;
+static vec3 axis;
+static float angle = 0;
+
 class GLInitializer
 {
 public:
@@ -128,19 +132,19 @@ private:
 		Model = glm::mat4(1.0f);
 
 		// Draw the Cows
-		DrawObject(VertexArrayID[0], vertexbuffer[0], 5, numVertices, 0.0f, 0.0f, 0.0f);
+		DrawObject(VertexArrayID[0], vertexbuffer[0], 5, numVertices, 0.0f, 0.0f, 0.0f, 0.0f);
 
 		//Draw fence posts
-		DrawObject(VertexArrayID[1], vertexbuffer[1], 52, fencePostVerts, 0.35f, 0.16f, 0.14f);
+		DrawObject(VertexArrayID[1], vertexbuffer[1], 51, fencePostVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
 		//Draw field
-		DrawObject(VertexArrayID[2], vertexbuffer[2], 1, fieldVerts, 0.184314f, 0.309804f, 0.184314f);
+		DrawObject(VertexArrayID[2], vertexbuffer[2], 1, fieldVerts, 0.0f, 0.184314f, 0.309804f, 0.184314f);
 
 		//Draw Beams
-		DrawObject(VertexArrayID[3], vertexbuffer[3], 2, fenceBeamVerts, 0.35f, 0.16f, 0.14f);
+		DrawObject(VertexArrayID[3], vertexbuffer[3], 2, fenceBeamVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
 		//Draw Rotated Beams
-		DrawObject(VertexArrayID[4], vertexbuffer[4], 2, fenceRotatedVerts, 0.35f, 0.16f, 0.14f);
+		DrawObject(VertexArrayID[4], vertexbuffer[4], 2, fenceRotatedVerts, 90.0f, 0.35f, 0.16f, 0.14f);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_3D);
 
@@ -150,8 +154,17 @@ private:
 		glFlush();
 	}
 
-	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, GLfloat color1, GLfloat color2, GLfloat color3)
+	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, GLfloat angle, GLfloat color1, GLfloat color2, GLfloat color3)
 	{
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		//MVP = Projection * View * Model;
+
+
+		axis = { 0.0, 1.0, 0.0 };
+		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
+
+		MVP *= Rotation;
+
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		glEnableVertexAttribArray(0);
@@ -164,15 +177,27 @@ private:
 		glProgramUniform3f(programID, color, color1, color2, color3);
 
 		glDrawArraysInstanced(GL_TRIANGLES, 0, vertices / 3, numObjects);
+
+
+
+		//MVP = Projection * View * Model;
+
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 	}
 
 	static void IdleFunction(void)
 	{
-		float angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * 45;  // X° per second
-		glm::vec3 axis(0.0, 1.0, 0.0);
-		glm::mat4 Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
+		angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * 45;  // X° per second
+		axis = { 0.0, 1.0, 0.0 };
+		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
 
-		MVP = Projection * View * Model *Rotation;
+		MVP = Projection * View * Model * Rotation;
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+
+		//MVP = Projection * View * Model;
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
 		glutPostRedisplay();
 	}
 
@@ -296,21 +321,20 @@ private:
 				{ 60.0f, -3.0f, 50.0f },
 				{ 60.0f, -3.0f, 60.0f },
 				{ 60.0f, -3.0f, 70.0f },
-				{ 60.0f, -3.0f, 80.0f },
 
-				{ 60.0f, -3.0f, 80.0f },
-				{ 50.0f, -3.0f, 80.0f },
-				{ 40.0f, -3.0f, 80.0f },
-				{ 30.0f, -3.0f, 80.0f },
-				{ 20.0f, -3.0f, 80.0f },
-				{ 10.0f, -3.0f, 80.0f },
-				{ 0.0f, -3.0f, 80.0f },
-				{ -10.0f, -3.0f, 80.0f },
-				{ -20.0f, -3.0f, 80.0f },
-				{ -30.0f, -3.0f, 80.0f },
-				{ -40.0f, -3.0f, 80.0f },
-				{ -50.0f, -3.0f, 80.0f },
-				{ -60.0f, -3.0f, 80.0f },
+				{ 60.0f, -3.0f, 70.0f },
+				{ 50.0f, -3.0f, 70.0f },
+				{ 40.0f, -3.0f, 70.0f },
+				{ 30.0f, -3.0f, 70.0f },
+				{ 20.0f, -3.0f, 70.0f },
+				{ 10.0f, -3.0f, 70.0f },
+				{ 0.0f, -3.0f, 70.0f },
+				{ -10.0f, -3.0f, 70.0f },
+				{ -20.0f, -3.0f, 70.0f },
+				{ -30.0f, -3.0f, 70.0f },
+				{ -40.0f, -3.0f, 70.0f },
+				{ -50.0f, -3.0f, 70.0f },
+				{ -60.0f, -3.0f, 70.0f },
 
 				{ -60.0f, -3.0f, -50.0f },
 				{ -60.0f, -3.0f, -40.0f },
@@ -368,7 +392,7 @@ private:
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		GLfloat fenceBeamOffsets[][3] = {
-				{ 60.0f, -5.0f, 80.0f },
+				{ 60.0f, -5.0f, 70.0f },
 				{ 60.0f, -5.0f, -50.0f }
 		};
 		glGenBuffers(1, &offsetsBufferID[3]);
@@ -377,22 +401,18 @@ private:
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
-		ObjectParser fenceRotatedParser;
-
-		vector<GLfloat> fenceBeamsRotated = fenceRotatedParser.Execute("fenceBeamsRotated.obj");
-		fenceRotatedVerts = fenceBeamsRotated.size();
-
+		fenceRotatedVerts = fenceBeamVerts;
 		glGenVertexArrays(1, &VertexArrayID[4]);
 		glBindVertexArray(VertexArrayID[4]);
 
 		glGenBuffers(1, vertexbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, fenceRotatedVerts * sizeof(GLfloat), fenceBeamsRotated.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, fenceRotatedVerts * sizeof(GLfloat), fenceBeams.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 		GLfloat fenceRotatedOffsets[][3] = {
-				{ -60.0f, -5.0f, 80.0f },
-				{ 60.0f, -5.0f, 80.0f }
+				{ 50.0f, -5.0f, -60.0f },
+				{ 50.0f, -5.0f, 60.0f }
 		};
 		glGenBuffers(1, &offsetsBufferID[4]);
 		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[4]);
