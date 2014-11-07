@@ -1,7 +1,7 @@
 #version 420 core
 
 // Interpolated values from the vertex shaders
-in vec3 fragmentColor;
+uniform vec3 fragmentColor;
 
 // Ouput data
 out vec3 color;
