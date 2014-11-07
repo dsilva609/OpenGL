@@ -127,94 +127,43 @@ private:
 		// Model matrix : an identity matrix (model will be at the origin)
 		Model = glm::mat4(1.0f);
 
-
-		// 1st attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-
-		//3rd attribute buffer : offsets
-		glEnableVertexAttribArray(2);
-
-		// Send our transformation to the currently bound shader, 
-		// in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-		glBindVertexArray(VertexArrayID[0]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-
-		color = glGetUniformLocation(programID, "fragmentColor");
-
-		glProgramUniform3f(programID, color, 0.0f, 0.0f, 0.0f);
-
 		// Draw the Cows
-		glDrawArraysInstanced(GL_TRIANGLES, 0, numVertices / 3, 5);
+		DrawObject(VertexArrayID[0], vertexbuffer[0], 5, numVertices, 0.0f, 0.0f, 0.0f);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(2);
+		//Draw fence posts
+		DrawObject(VertexArrayID[1], vertexbuffer[1], 52, fencePostVerts, 0.35f, 0.16f, 0.14f);
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(2);
+		//Draw field
+		DrawObject(VertexArrayID[2], vertexbuffer[2], 1, fieldVerts, 0.184314f, 0.309804f, 0.184314f);
 
-		glBindVertexArray(VertexArrayID[1]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+		//Draw Beams
+		DrawObject(VertexArrayID[3], vertexbuffer[3], 2, fenceBeamVerts, 0.35f, 0.16f, 0.14f);
 
-		color = glGetUniformLocation(programID, "fragmentColor");
+		//Draw Rotated Beams
+		DrawObject(VertexArrayID[4], vertexbuffer[4], 2, fenceRotatedVerts, 0.35f, 0.16f, 0.14f);
 
-		glProgramUniform3f(programID, color, 0.35f, 0.16f, 0.14f);
-		//draw ico fence
-		glDrawArraysInstanced(GL_TRIANGLES, 0, fencePostVerts / 3, 52);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(2);
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(2);
-		//draw field
-		glBindVertexArray(VertexArrayID[2]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
-
-		color = glGetUniformLocation(programID, "fragmentColor");
-
-		glProgramUniform3f(programID, color, 0.184314f, 0.309804f, 0.184314f);
-
-		glDrawArrays(GL_TRIANGLES, 0, fieldVerts / 3);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(2);
-
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(2);
-		//draw fence
-		glBindVertexArray(VertexArrayID[3]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
-
-		color = glGetUniformLocation(programID, "fragmentColor");
-
-		glProgramUniform3f(programID, color, 0.35f, 0.16f, 0.14f);
-
-		glDrawArraysInstanced(GL_TRIANGLES, 0, fenceBeamVerts / 3, 2);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(2);
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(2);
-		//draw fence
-		glBindVertexArray(VertexArrayID[4]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[4]);
-
-		color = glGetUniformLocation(programID, "fragmentColor");
-
-		glProgramUniform3f(programID, color, 0.35f, 0.16f, 0.14f);
-
-		glDrawArraysInstanced(GL_TRIANGLES, 0, fenceRotatedVerts / 3, 2);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_3D);
-
 
 		glutSwapBuffers();
 		glutPostRedisplay();
 
 		glFlush();
+	}
+
+	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, GLfloat color1, GLfloat color2, GLfloat color3)
+	{
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(2);
+
+		glBindVertexArray(vertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+		color = glGetUniformLocation(programID, "fragmentColor");
+		glProgramUniform3f(programID, color, color1, color2, color3);
+
+		glDrawArraysInstanced(GL_TRIANGLES, 0, vertices / 3, numObjects);
 	}
 
 	static void IdleFunction(void)
