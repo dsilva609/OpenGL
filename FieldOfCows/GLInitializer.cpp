@@ -43,7 +43,7 @@ static float angle = 0;
 class GLInitializer
 {
 public:
-	void Initialize(int argCount, char* argValues[], int windowWidth, int windowHeight, string objectFilename, const char* vertexShaderFilename, const char* fragmentShaderFilename)
+	void Initialize(int argCount, char* argValues[], int windowWidth, int windowHeight, const char* vertexShaderFilename, const char* fragmentShaderFilename)
 	{
 		GLenum glewInitResult;
 
