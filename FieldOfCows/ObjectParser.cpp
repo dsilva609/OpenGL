@@ -19,11 +19,12 @@ typedef struct
 
 class ObjectParser
 {
-public:
+private:
 	vector<Vertex> vertices;
 	vector<Face> faces;
 	vector <GLfloat>data;
 
+public:
 	vector<GLfloat> Execute(string filename)
 	{
 		fstream file;
@@ -80,16 +81,8 @@ public:
 					faces.push_back(tempFace);
 				}
 			}
+			file.close();
 
-			/*cout << "vertices" << endl;
-			for (int i = 0; i < vertices.size(); i++)
-			cout << vertices.at(i).XYZ[0] << " " << vertices.at(i).XYZ[1] << " " << vertices.at(i).XYZ[2] << endl;
-
-			cout << "faces" << endl;
-			for (int i = 0; i < faces.size(); i++)
-			cout << faces.at(i).XYZ[0] << " " << faces.at(i).XYZ[1] << " " << faces.at(i).XYZ[2] << endl;
-
-			cout << "data" << endl;*/
 			for (int i = 0; i < faces.size(); i++)
 			{
 				for (int j = 0; j < 3; j++)
@@ -100,9 +93,6 @@ public:
 				}
 			}
 			return data;
-			/*cout << "data size: " << data.size() << endl;
-			for (int i = 0; i < data.size(); i = i + 3)
-			cout << data.at(i) << " " << data.at(i + 1) << " " << data.at(i + 2) << endl;*/
 		}
 
 		else

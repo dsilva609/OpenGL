@@ -5,6 +5,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include "ObjectParser.cpp"
+#include "shader.hpp"
 
 using namespace glm;
 using namespace std;
@@ -15,7 +16,7 @@ static int currentWidth;
 static int currentHeight;
 static unsigned frameCount;
 static int dataSize;
-static int numVertices;
+static int cowVerts;
 static int fencePostVerts;
 static int fieldVerts;
 static int fenceBeamVerts;
@@ -42,7 +43,7 @@ static float angle = 0;
 class GLInitializer
 {
 public:
-	void Initialize(int argCount, char* argValues[], int windowWidth, int windowHeight, string objectFilename, const char* vertexShaderFilename, const char* fragmentShaderFilename)
+	void Initialize(int argCount, char* argValues[], int windowWidth, int windowHeight, const char* vertexShaderFilename, const char* fragmentShaderFilename)
 	{
 		GLenum glewInitResult;
 
@@ -78,7 +79,9 @@ public:
 		// Our ModelViewProjection : multiplication of our 3 matrices
 		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
-		CreateVAO(objectFilename, vertexShaderFilename, fragmentShaderFilename);
+		//CreateVAO(objectFilename);
+
+		SetupObjects();
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glMatrixMode(GL_MODELVIEW);
@@ -132,8 +135,6 @@ private:
 		frameCount++;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
 		// Use our shader
 		glUseProgram(programID);
 
@@ -149,7 +150,7 @@ private:
 		Model = glm::mat4(1.0f);
 
 		// Draw the Cows
-		DrawObject(VertexArrayID[0], vertexbuffer[0], 5, numVertices, 0.0f, 0.0f, 0.0f, 0.0f);
+		DrawObject(VertexArrayID[0], vertexbuffer[0], 5, cowVerts, 0.0f, 0.0f, 0.0f, 0.0f);
 
 		//Draw fence posts
 		DrawObject(VertexArrayID[1], vertexbuffer[1], 51, fencePostVerts, 0.0f, 0.35f, 0.16f, 0.14f);
@@ -171,12 +172,110 @@ private:
 		glFlush();
 	}
 
-	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, GLfloat angle, GLfloat color1, GLfloat color2, GLfloat color3)
+	void SetupObjects()
 	{
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		//MVP = Projection * View * Model;
+		vector<GLfloat> cowOffsets =
+		{
+			5.0f, 0.0f, -40.0f,
+			-10.0f, 0.0f, -20.0f,
+			0.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 20.0f,
+			12.0f, 0.0f, 40.0f
+		};
 
+		cowVerts = CreateVAO("triangulatedCowNoNormals.obj", 0, cowOffsets);
+		cowOffsets.clear();
 
+		vector<GLfloat> fenceOffsets =
+		{
+			60.0f, -3.0f, -50.0f,
+			50.0f, -3.0f, -50.0f,
+			40.0f, -3.0f, -50.0f,
+			30.0f, -3.0f, -50.0f,
+			20.0f, -3.0f, -50.0f,
+			10.0f, -3.0f, -50.0f,
+			0.0f, -3.0f, -50.0f,
+			-10.0f, -3.0f, -50.0f,
+			-20.0f, -3.0f, -50.0f,
+			-30.0f, -3.0f, -50.0f,
+			-40.0f, -3.0f, -50.0f,
+			-50.0f, -3.0f, -50.0f,
+			-60.0f, -3.0f, -50.0f,
+
+			60.0f, -3.0f, -40.0f,
+			60.0f, -3.0f, -30.0f,
+			60.0f, -3.0f, -20.0f,
+			60.0f, -3.0f, -10.0f,
+			60.0f, -3.0f, 0.0f,
+			60.0f, -3.0f, 10.0f,
+			60.0f, -3.0f, 20.0f,
+			60.0f, -3.0f, 30.0f,
+			60.0f, -3.0f, 40.0f,
+			60.0f, -3.0f, 50.0f,
+			60.0f, -3.0f, 60.0f,
+			60.0f, -3.0f, 70.0f,
+
+			60.0f, -3.0f, 70.0f,
+			50.0f, -3.0f, 70.0f,
+			40.0f, -3.0f, 70.0f,
+			30.0f, -3.0f, 70.0f,
+			20.0f, -3.0f, 70.0f,
+			10.0f, -3.0f, 70.0f,
+			0.0f, -3.0f, 70.0f,
+			-10.0f, -3.0f, 70.0f,
+			-20.0f, -3.0f, 70.0f,
+			-30.0f, -3.0f, 70.0f,
+			-40.0f, -3.0f, 70.0f,
+			-50.0f, -3.0f, 70.0f,
+			-60.0f, -3.0f, 70.0f,
+
+			-60.0f, -3.0f, -50.0f,
+			-60.0f, -3.0f, -40.0f,
+			-60.0f, -3.0f, -30.0f,
+			-60.0f, -3.0f, -20.0f,
+			-60.0f, -3.0f, -10.0f,
+			-60.0f, -3.0f, 0.0f,
+			-60.0f, -3.0f, 10.0f,
+			-60.0f, -3.0f, 20.0f,
+			-60.0f, -3.0f, 30.0f,
+			-60.0f, -3.0f, 40.0f,
+			-60.0f, -3.0f, 50.0f,
+			-60.0f, -3.0f, 60.0f,
+			-60.0f, -3.0f, 70.0f,
+		};
+
+		fencePostVerts = CreateVAO("fencePost.obj", 1, fenceOffsets);
+		fenceOffsets.clear();
+
+		vector<GLfloat> fieldOffsets =
+		{
+			60.0f, 0.0f, -50.0f
+		};
+
+		fieldVerts = CreateVAO("field.obj", 2, fieldOffsets);
+		fieldOffsets.clear();
+
+		vector<GLfloat> fenceBeamOffsets =
+		{
+			60.0f, -5.0f, 70.0f,
+			60.0f, -5.0f, -50.0f
+		};
+
+		fenceBeamVerts = CreateVAO("fenceBeams.obj", 3, fenceBeamOffsets);
+		fenceBeamOffsets.clear();
+
+		vector<GLfloat> fenceRotatedOffsets =
+		{
+			50.0f, -5.0f, -60.0f,
+			50.0f, -5.0f, 60.0f
+		};
+
+		fenceRotatedVerts = CreateVAO("fenceBeams.obj", 4, fenceRotatedOffsets);
+		fenceRotatedOffsets.clear();
+	}
+
+	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, float angle, GLfloat color1, GLfloat color2, GLfloat color3)
+	{
 		axis = { 0.0, 1.0, 0.0 };
 		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
 
@@ -191,15 +290,10 @@ private:
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
 		color = glGetUniformLocation(programID, "fragmentColor");
-		glProgramUniform3f(programID, color, color1, color2, color3);
+
+		glUniform3f(color, color1, color2, color3);
 
 		glDrawArraysInstanced(GL_TRIANGLES, 0, vertices / 3, numObjects);
-
-
-
-		//MVP = Projection * View * Model;
-
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 	}
 
 	static void IdleFunction(void)
@@ -209,11 +303,6 @@ private:
 		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
 
 		MVP = Projection * View * Model * Rotation;
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-
-		//MVP = Projection * View * Model;
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		glutPostRedisplay();
 	}
@@ -240,18 +329,17 @@ private:
 		glutTimerFunc(250, TimerFunction, 1);
 	}
 
-	void CreateVAO(string objectFilename, const char*  vertexShaderFilename, const char* fragmentShaderFilename)
+	int CreateVAO(string objectFilename, int objectNumber, vector<GLfloat> offsets)
 	{
-
 		//VertexArrayID;
-		glGenVertexArrays(1, &VertexArrayID[0]);
-		glBindVertexArray(VertexArrayID[0]);
+		glGenVertexArrays(1, &VertexArrayID[objectNumber]);
+		glBindVertexArray(VertexArrayID[objectNumber]);
 
 		ObjectParser parser;
 
 		vector <GLfloat> data = parser.Execute(objectFilename);
-		numVertices = data.size();
-		dataSize = numVertices * sizeof(GLfloat);
+		int numVerts = data.size();
+		dataSize = numVerts * sizeof(GLfloat);
 
 		glGenBuffers(1, vertexbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
@@ -267,254 +355,12 @@ private:
 
 		data.clear();
 
-		cout << dataSize << endl;
-		cout << numVertices << endl;
-
-		GLfloat cowOffsets[][3] = {
-				{ 5.0f, 0.0f, -40.0f },
-				{ -10.0f, 0.0f, -20.0f },
-				{ 0.0f, 0.0f, 0.0f },
-				{ 0.0f, 0.0f, 20.0f },
-				{ 12.0f, 0.0f, 40.0f },
-		};
-
 		glGenBuffers(1, &offsetsBufferID[0]);
 		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[0]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(cowOffsets), cowOffsets, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, offsets.size() * sizeof(GLfloat), offsets.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glVertexAttribDivisor(2, 1);
 
-		ObjectParser fencePostParser;
-
-		vector<GLfloat> fencePosts = fencePostParser.Execute("fencePost.obj");
-
-		fencePostVerts = fencePosts.size();
-
-		glGenVertexArrays(1, &VertexArrayID[1]);
-		glBindVertexArray(VertexArrayID[1]);
-
-		glGenBuffers(1, vertexbuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, fencePostVerts * sizeof(GLfloat), fencePosts.data(), GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		GLfloat fenceOffsets[][3] = {
-				{ 60.0f, -3.0f, -50.0f },
-				{ 50.0f, -3.0f, -50.0f },
-				{ 40.0f, -3.0f, -50.0f },
-				{ 30.0f, -3.0f, -50.0f },
-				{ 20.0f, -3.0f, -50.0f },
-				{ 10.0f, -3.0f, -50.0f },
-				{ 0.0f, -3.0f, -50.0f },
-				{ -10.0f, -3.0f, -50.0f },
-				{ -20.0f, -3.0f, -50.0f },
-				{ -30.0f, -3.0f, -50.0f },
-				{ -40.0f, -3.0f, -50.0f },
-				{ -50.0f, -3.0f, -50.0f },
-				{ -60.0f, -3.0f, -50.0f },
-
-				{ 60.0f, -3.0f, -40.0f },
-				{ 60.0f, -3.0f, -30.0f },
-				{ 60.0f, -3.0f, -20.0f },
-				{ 60.0f, -3.0f, -10.0f },
-				{ 60.0f, -3.0f, 0.0f },
-				{ 60.0f, -3.0f, 10.0f },
-				{ 60.0f, -3.0f, 20.0f },
-				{ 60.0f, -3.0f, 30.0f },
-				{ 60.0f, -3.0f, 40.0f },
-				{ 60.0f, -3.0f, 50.0f },
-				{ 60.0f, -3.0f, 60.0f },
-				{ 60.0f, -3.0f, 70.0f },
-
-				{ 60.0f, -3.0f, 70.0f },
-				{ 50.0f, -3.0f, 70.0f },
-				{ 40.0f, -3.0f, 70.0f },
-				{ 30.0f, -3.0f, 70.0f },
-				{ 20.0f, -3.0f, 70.0f },
-				{ 10.0f, -3.0f, 70.0f },
-				{ 0.0f, -3.0f, 70.0f },
-				{ -10.0f, -3.0f, 70.0f },
-				{ -20.0f, -3.0f, 70.0f },
-				{ -30.0f, -3.0f, 70.0f },
-				{ -40.0f, -3.0f, 70.0f },
-				{ -50.0f, -3.0f, 70.0f },
-				{ -60.0f, -3.0f, 70.0f },
-
-				{ -60.0f, -3.0f, -50.0f },
-				{ -60.0f, -3.0f, -40.0f },
-				{ -60.0f, -3.0f, -30.0f },
-				{ -60.0f, -3.0f, -20.0f },
-				{ -60.0f, -3.0f, -10.0f },
-				{ -60.0f, -3.0f, 0.0f },
-				{ -60.0f, -3.0f, 10.0f },
-				{ -60.0f, -3.0f, 20.0f },
-				{ -60.0f, -3.0f, 30.0f },
-				{ -60.0f, -3.0f, 40.0f },
-				{ -60.0f, -3.0f, 50.0f },
-				{ -60.0f, -3.0f, 60.0f },
-				{ -60.0f, -3.0f, 70.0f },
-		};
-		glGenBuffers(1, &offsetsBufferID[1]);
-		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[1]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceOffsets), fenceOffsets, GL_STATIC_DRAW);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribDivisor(2, 1);
-
-		ObjectParser fieldParser;
-
-		vector<GLfloat> field = fieldParser.Execute("field.obj");
-		fieldVerts = field.size();
-
-		glGenVertexArrays(1, &VertexArrayID[2]);
-		glBindVertexArray(VertexArrayID[2]);
-
-		glGenBuffers(1, vertexbuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, fieldVerts * sizeof(GLfloat), field.data(), GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		GLfloat fieldOffsets[][3] = {
-				{ 60.0f, 0.0f, -50.0f }
-		};
-		glGenBuffers(1, &offsetsBufferID[1]);
-		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[1]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fieldOffsets) * sizeof(GLfloat), fieldOffsets, GL_STATIC_DRAW);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribDivisor(2, 1);
-
-		ObjectParser fenceParser;
-
-		vector<GLfloat> fenceBeams = fenceParser.Execute("fenceBeams.obj");
-		fenceBeamVerts = fenceBeams.size();
-
-		glGenVertexArrays(1, &VertexArrayID[3]);
-		glBindVertexArray(VertexArrayID[3]);
-
-		glGenBuffers(1, vertexbuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, fenceBeamVerts * sizeof(GLfloat), fenceBeams.data(), GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		GLfloat fenceBeamOffsets[][3] = {
-				{ 60.0f, -5.0f, 70.0f },
-				{ 60.0f, -5.0f, -50.0f }
-		};
-		glGenBuffers(1, &offsetsBufferID[3]);
-		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[3]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceBeamOffsets), fenceBeamOffsets, GL_STATIC_DRAW);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribDivisor(2, 1);
-
-		fenceRotatedVerts = fenceBeamVerts;
-		glGenVertexArrays(1, &VertexArrayID[4]);
-		glBindVertexArray(VertexArrayID[4]);
-
-		glGenBuffers(1, vertexbuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-		glBufferData(GL_ARRAY_BUFFER, fenceRotatedVerts * sizeof(GLfloat), fenceBeams.data(), GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		GLfloat fenceRotatedOffsets[][3] = {
-				{ 50.0f, -5.0f, -60.0f },
-				{ 50.0f, -5.0f, 60.0f }
-		};
-		glGenBuffers(1, &offsetsBufferID[4]);
-		glBindBuffer(GL_ARRAY_BUFFER, offsetsBufferID[4]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(fenceRotatedOffsets), fenceRotatedOffsets, GL_STATIC_DRAW);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribDivisor(2, 1);
-	}
-
-	GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
-	{
-
-		// Create the shaders
-		GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-		GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-		// Read the Vertex Shader code from the file
-		std::string VertexShaderCode;
-		std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
-		if (VertexShaderStream.is_open())
-		{
-			std::string Line = "";
-			while (getline(VertexShaderStream, Line))
-				VertexShaderCode += "\n" + Line;
-			VertexShaderStream.close();
-		}
-		else
-		{
-			printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
-			getchar();
-			return 0;
-		}
-
-		// Read the Fragment Shader code from the file
-		std::string FragmentShaderCode;
-		std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
-		if (FragmentShaderStream.is_open())
-		{
-			std::string Line = "";
-			while (getline(FragmentShaderStream, Line))
-				FragmentShaderCode += "\n" + Line;
-			FragmentShaderStream.close();
-		}
-
-		GLint Result = GL_FALSE;
-		int InfoLogLength;
-
-		// Compile Vertex Shader
-		printf("Compiling shader : %s\n", vertex_file_path);
-		char const * VertexSourcePointer = VertexShaderCode.c_str();
-		glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
-		glCompileShader(VertexShaderID);
-
-		// Check Vertex Shader
-		glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-		glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-		if (InfoLogLength > 0)
-		{
-			std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
-			glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-			printf("%s\n", &VertexShaderErrorMessage[0]);
-		}
-
-		// Compile Fragment Shader
-		printf("Compiling shader : %s\n", fragment_file_path);
-		char const * FragmentSourcePointer = FragmentShaderCode.c_str();
-		glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
-		glCompileShader(FragmentShaderID);
-
-		// Check Fragment Shader
-		glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-		glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-		if (InfoLogLength > 0)
-		{
-			std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
-			glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-			printf("%s\n", &FragmentShaderErrorMessage[0]);
-		}
-
-		// Link the program
-		printf("Linking program\n");
-		GLuint ProgramID = glCreateProgram();
-		glAttachShader(ProgramID, VertexShaderID);
-		glAttachShader(ProgramID, FragmentShaderID);
-		glLinkProgram(ProgramID);
-
-		// Check the program
-		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-		if (InfoLogLength > 0)
-		{
-			std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
-			glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-			printf("%s\n", &ProgramErrorMessage[0]);
-		}
-
-		glDeleteShader(VertexShaderID);
-		glDeleteShader(FragmentShaderID);
-
-		return ProgramID;
+		return numVerts;
 	}
 };

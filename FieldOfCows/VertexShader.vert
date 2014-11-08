@@ -5,7 +5,7 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 color;
 layout(location = 2) in vec3 offset;
 // Output data ; will be interpolated for each fragment.
-out vec3 fragmentColor;
+// vec3 fragmentColor;
 // Values that stay constant for the whole mesh.
 uniform mat4 MVP;
 
@@ -16,5 +16,5 @@ void main(){
 
 	// The color of each vertex will be interpolated
 	// to produce the color of each fragment
-	fragmentColor = color;
+//	fragmentColor = color;
 }
