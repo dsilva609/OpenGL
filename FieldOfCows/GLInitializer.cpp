@@ -79,8 +79,6 @@ public:
 		// Our ModelViewProjection : multiplication of our 3 matrices
 		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
-		//CreateVAO(objectFilename);
-
 		SetupObjects();
 
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
