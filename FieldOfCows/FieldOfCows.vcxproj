@@ -89,6 +89,11 @@
   <ItemGroup>
     <ClInclude Include="shader.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="coneWithNormals.obj" />
+    <Object Include="cylinderWithNormals.obj" />
+    <Object Include="sphereWithNormals.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

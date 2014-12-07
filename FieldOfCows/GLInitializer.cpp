@@ -148,19 +148,19 @@ private:
 		Model = glm::mat4(1.0f);
 
 		// Draw the Cows
-		DrawObject(VertexArrayID[0], vertexbuffer[0], 5, cowVerts, 0.0f, 0.0f, 0.0f, 0.0f);
+		//DrawObject(VertexArrayID[0], vertexbuffer[0], 5, cowVerts, 0.0f, 0.0f, 0.0f, 0.0f);
 
 		//Draw fence posts
-		DrawObject(VertexArrayID[1], vertexbuffer[1], 51, fencePostVerts, 0.0f, 0.35f, 0.16f, 0.14f);
+		//DrawObject(VertexArrayID[1], vertexbuffer[1], 51, fencePostVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
 		//Draw field
-		DrawObject(VertexArrayID[2], vertexbuffer[2], 1, fieldVerts, 0.0f, 0.184314f, 0.309804f, 0.184314f);
+		//DrawObject(VertexArrayID[2], vertexbuffer[2], 1, fieldVerts, 0.0f, 0.184314f, 0.309804f, 0.184314f);
 
 		//Draw Beams
-		DrawObject(VertexArrayID[3], vertexbuffer[3], 2, fenceBeamVerts, 0.0f, 0.35f, 0.16f, 0.14f);
+		//DrawObject(VertexArrayID[3], vertexbuffer[3], 2, fenceBeamVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
 		//Draw Rotated Beams
-		DrawObject(VertexArrayID[4], vertexbuffer[4], 2, fenceRotatedVerts, 90.0f, 0.35f, 0.16f, 0.14f);
+		//DrawObject(VertexArrayID[4], vertexbuffer[4], 2, fenceRotatedVerts, 90.0f, 0.35f, 0.16f, 0.14f);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_3D);
 
