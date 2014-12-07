@@ -45,13 +45,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="coneWithNormals.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="cylinderWithNormals.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-    <Object Include="sphereWithNormals.obj">
+    <Object Include="field.obj">
       <Filter>Resource Files</Filter>
     </Object>
   </ItemGroup>

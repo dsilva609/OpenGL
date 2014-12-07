@@ -10,17 +10,17 @@
 using namespace glm;
 using namespace std;
 
-#define WINDOW_TITLE_PREFIX "Project 2 - Field of Cows"
+#define WINDOW_TITLE_PREFIX "Project 3 - Luxo"
 
 static int currentWidth;
 static int currentHeight;
 static unsigned frameCount;
 static int dataSize;
-static int cowVerts;
-static int fencePostVerts;
+static int baseVerts;
+static int headVerts;
 static int fieldVerts;
-static int fenceBeamVerts;
-static int fenceRotatedVerts;
+static int jointVerts;
+static int armVerts;
 static float rotationAngle;
 
 static GLuint programID;
@@ -137,32 +137,33 @@ private:
 		glUseProgram(programID);
 
 		// Projection matrix : 90° Field of View, 16:9 ratio, display range : 0.1 unit <-> 150 units
-		Projection = glm::perspective(90.0f, 16.0f / 9.0f, 0.1f, 200.0f);
+		Projection = glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 200.0f);
 		// Camera matrix
 		View = glm::lookAt(
-			glm::vec3(100, 3, 0), // Camera is at (x, y, z), in World Space
+			glm::vec3(50, 3, 0), // Camera is at (x, y, z), in World Space
 			glm::vec3(0, 0, 0), // and looks at the origin
 			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 			);
 		// Model matrix : an identity matrix (model will be at the origin)
 		Model = glm::mat4(1.0f);
+		MVP = Projection * View * Model * Rotation;
 
-		// Draw the Cows
-		//DrawObject(VertexArrayID[0], vertexbuffer[0], 5, cowVerts, 0.0f, 0.0f, 0.0f, 0.0f);
+		//Draw Head
+		DrawObject(VertexArrayID[0], vertexbuffer[0], 1, headVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
-		//Draw fence posts
-		//DrawObject(VertexArrayID[1], vertexbuffer[1], 51, fencePostVerts, 0.0f, 0.35f, 0.16f, 0.14f);
+		//Draw joints
+		DrawObject(VertexArrayID[1], vertexbuffer[1], 2, jointVerts, 0.0f, 0.35f, 0.16f, 0.14f);
+
+		//Draw Arms
+		DrawObject(VertexArrayID[2], vertexbuffer[2], 2, armVerts, 90.0f, 0.35f, 0.16f, 0.14f);
+
+		// Draw the Base
+		DrawObject(VertexArrayID[3], vertexbuffer[3], 1, baseVerts, 0.0f, 0.0f, 0.0f, 0.0f);
 
 		//Draw field
-		//DrawObject(VertexArrayID[2], vertexbuffer[2], 1, fieldVerts, 0.0f, 0.184314f, 0.309804f, 0.184314f);
+		DrawObject(VertexArrayID[4], vertexbuffer[4], 1, fieldVerts, 0.0f, 0.184314f, 0.309804f, 0.184314f);
 
-		//Draw Beams
-		//DrawObject(VertexArrayID[3], vertexbuffer[3], 2, fenceBeamVerts, 0.0f, 0.35f, 0.16f, 0.14f);
-
-		//Draw Rotated Beams
-		//DrawObject(VertexArrayID[4], vertexbuffer[4], 2, fenceRotatedVerts, 90.0f, 0.35f, 0.16f, 0.14f);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_3D);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		glutSwapBuffers();
 		glutPostRedisplay();
@@ -172,104 +173,47 @@ private:
 
 	void SetupObjects()
 	{
-		vector<GLfloat> cowOffsets =
+		vector<GLfloat> headOffsets =
 		{
-			5.0f, 0.0f, -40.0f,
-			-10.0f, 0.0f, -20.0f,
+			0.0f, 9.0f, 0.0f
+		};
+
+		headVerts = CreateVAO("coneWithNormals.obj", 0, headOffsets);
+		headOffsets.clear();
+
+		vector<GLfloat> jointOffsets =
+		{
+			0.0f, 6.0f, 0.0f,
+			0.0f, 8.0f, 0.0f
+		};
+
+		jointVerts = CreateVAO("sphereWithNormals.obj", 1, jointOffsets);
+		jointOffsets.clear();
+
+		vector<GLfloat> armOffsets =
+		{
+			0.0f, 5.0f, 0.0f,
+			0.0f, 7.0f, 0.0f
+		};
+
+		armVerts = CreateVAO("cylinderWithNormals.obj", 2, armOffsets);
+		armOffsets.clear();
+
+		vector<GLfloat> baseOffsets =
+		{
 			0.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 20.0f,
-			12.0f, 0.0f, 40.0f
 		};
 
-		cowVerts = CreateVAO("triangulatedCowNoNormals.obj", 0, cowOffsets);
-		cowOffsets.clear();
-
-		vector<GLfloat> fenceOffsets =
-		{
-			60.0f, -3.0f, -50.0f,
-			50.0f, -3.0f, -50.0f,
-			40.0f, -3.0f, -50.0f,
-			30.0f, -3.0f, -50.0f,
-			20.0f, -3.0f, -50.0f,
-			10.0f, -3.0f, -50.0f,
-			0.0f, -3.0f, -50.0f,
-			-10.0f, -3.0f, -50.0f,
-			-20.0f, -3.0f, -50.0f,
-			-30.0f, -3.0f, -50.0f,
-			-40.0f, -3.0f, -50.0f,
-			-50.0f, -3.0f, -50.0f,
-			-60.0f, -3.0f, -50.0f,
-
-			60.0f, -3.0f, -40.0f,
-			60.0f, -3.0f, -30.0f,
-			60.0f, -3.0f, -20.0f,
-			60.0f, -3.0f, -10.0f,
-			60.0f, -3.0f, 0.0f,
-			60.0f, -3.0f, 10.0f,
-			60.0f, -3.0f, 20.0f,
-			60.0f, -3.0f, 30.0f,
-			60.0f, -3.0f, 40.0f,
-			60.0f, -3.0f, 50.0f,
-			60.0f, -3.0f, 60.0f,
-			60.0f, -3.0f, 70.0f,
-
-			60.0f, -3.0f, 70.0f,
-			50.0f, -3.0f, 70.0f,
-			40.0f, -3.0f, 70.0f,
-			30.0f, -3.0f, 70.0f,
-			20.0f, -3.0f, 70.0f,
-			10.0f, -3.0f, 70.0f,
-			0.0f, -3.0f, 70.0f,
-			-10.0f, -3.0f, 70.0f,
-			-20.0f, -3.0f, 70.0f,
-			-30.0f, -3.0f, 70.0f,
-			-40.0f, -3.0f, 70.0f,
-			-50.0f, -3.0f, 70.0f,
-			-60.0f, -3.0f, 70.0f,
-
-			-60.0f, -3.0f, -50.0f,
-			-60.0f, -3.0f, -40.0f,
-			-60.0f, -3.0f, -30.0f,
-			-60.0f, -3.0f, -20.0f,
-			-60.0f, -3.0f, -10.0f,
-			-60.0f, -3.0f, 0.0f,
-			-60.0f, -3.0f, 10.0f,
-			-60.0f, -3.0f, 20.0f,
-			-60.0f, -3.0f, 30.0f,
-			-60.0f, -3.0f, 40.0f,
-			-60.0f, -3.0f, 50.0f,
-			-60.0f, -3.0f, 60.0f,
-			-60.0f, -3.0f, 70.0f,
-		};
-
-		fencePostVerts = CreateVAO("fencePost.obj", 1, fenceOffsets);
-		fenceOffsets.clear();
+		baseVerts = CreateVAO("cylinderWithNormals.obj", 3, baseOffsets);
+		baseOffsets.clear();
 
 		vector<GLfloat> fieldOffsets =
 		{
 			60.0f, 0.0f, -50.0f
 		};
 
-		fieldVerts = CreateVAO("field.obj", 2, fieldOffsets);
+		fieldVerts = CreateVAO("field.obj", 4, fieldOffsets);
 		fieldOffsets.clear();
-
-		vector<GLfloat> fenceBeamOffsets =
-		{
-			60.0f, -5.0f, 70.0f,
-			60.0f, -5.0f, -50.0f
-		};
-
-		fenceBeamVerts = CreateVAO("fenceBeams.obj", 3, fenceBeamOffsets);
-		fenceBeamOffsets.clear();
-
-		vector<GLfloat> fenceRotatedOffsets =
-		{
-			50.0f, -5.0f, -60.0f,
-			50.0f, -5.0f, 60.0f
-		};
-
-		fenceRotatedVerts = CreateVAO("fenceBeams.obj", 4, fenceRotatedOffsets);
-		fenceRotatedOffsets.clear();
 	}
 
 	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, float angle, GLfloat color1, GLfloat color2, GLfloat color3)

@@ -19,22 +19,29 @@ typedef struct
 
 class ObjectParser
 {
+public:
+	vector<GLfloat> Execute(string filename)
+	{
+		Read(filename);
+
+		return data;
+	}
+
 private:
 	vector<Vertex> vertices;
 	vector<Face> faces;
-	vector <GLfloat>data;
+	vector<GLfloat> data;
 
-public:
-	vector<GLfloat> Execute(string filename)
+	void Read(string filename)
 	{
 		fstream file;
 		string lineIn;
 		Vertex tempVert;
 		Face tempFace;
-		string buffer;
+		string buffer, tempStr;
 		float flt;
 		int num;
-		stringstream stream;
+		stringstream stream, numStream;
 
 		file.open(filename);
 
@@ -68,16 +75,19 @@ public:
 					stream.str(lineIn);
 					stream >> buffer;
 
-					stream >> num;
-					tempFace.XYZ[0] = num;
+					for (int i = 0; i < 3; i++)
+					{
+						stream >> tempStr;
+						tempStr = tempStr.substr(0, tempStr.find("//"));
+						numStream.str(tempStr);
 
-					stream >> num;
-					tempFace.XYZ[1] = num;
-
-					stream >> num;
-					tempFace.XYZ[2] = num;
-
+						numStream >> num;
+						tempFace.XYZ[i] = num;
+						numStream.clear();
+					}
+				
 					stream.clear();
+					numStream.clear();
 					faces.push_back(tempFace);
 				}
 			}
@@ -92,9 +102,7 @@ public:
 					data.push_back(vertices.at(faces.at(i).XYZ[j]).XYZ[2]);
 				}
 			}
-			return data;
 		}
-
 		else
 			cout << "Could not open file \"" << filename << "\"" << endl;
 		file.close();
