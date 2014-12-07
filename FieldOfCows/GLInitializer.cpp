@@ -32,6 +32,7 @@ static GLuint colorbuffer[5];
 static GLuint color;
 
 static mat4 MVP;
+static mat4 MVPOrig;
 static mat4 Projection;
 static mat4 View;
 static mat4 Model;
@@ -76,13 +77,10 @@ public:
 		// Get a handle for our "MVP" uniform
 		MatrixID = glGetUniformLocation(programID, "MVP");
 
-		// Our ModelViewProjection : multiplication of our 3 matrices
-		MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
 		SetupObjects();
 
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glMatrixMode(GL_MODELVIEW);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glLoadIdentity();
 		glOrtho(-10.0, 10.0, -10.0, 10.0, -10.0, 10.0);
 
@@ -129,7 +127,6 @@ private:
 
 	static void RenderFunction(void)
 	{
-
 		frameCount++;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -146,16 +143,18 @@ private:
 			);
 		// Model matrix : an identity matrix (model will be at the origin)
 		Model = glm::mat4(1.0f);
+
 		MVP = Projection * View * Model * Rotation;
+		MVPOrig = MVP;
 
 		//Draw Head
-		DrawObject(VertexArrayID[0], vertexbuffer[0], 1, headVerts, 0.0f, 0.35f, 0.16f, 0.14f);
+		DrawObject(VertexArrayID[0], vertexbuffer[0], 1, headVerts, 90.0f, 0.35f, 0.16f, 0.14f);
 
 		//Draw joints
-		DrawObject(VertexArrayID[1], vertexbuffer[1], 2, jointVerts, 0.0f, 0.35f, 0.16f, 0.14f);
+		DrawObject(VertexArrayID[1], vertexbuffer[1], 3, jointVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
 		//Draw Arms
-		DrawObject(VertexArrayID[2], vertexbuffer[2], 2, armVerts, 90.0f, 0.35f, 0.16f, 0.14f);
+		DrawObject(VertexArrayID[2], vertexbuffer[2], 2, armVerts, 0.0f, 0.35f, 0.16f, 0.14f);
 
 		// Draw the Base
 		DrawObject(VertexArrayID[3], vertexbuffer[3], 1, baseVerts, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -175,7 +174,7 @@ private:
 	{
 		vector<GLfloat> headOffsets =
 		{
-			0.0f, 9.0f, 0.0f
+			0.0f, -1.0f, -8.0f
 		};
 
 		headVerts = CreateVAO("coneWithNormals.obj", 0, headOffsets);
@@ -183,8 +182,9 @@ private:
 
 		vector<GLfloat> jointOffsets =
 		{
-			0.0f, 6.0f, 0.0f,
-			0.0f, 8.0f, 0.0f
+			0.0f, 1.5f, 0.0f,
+			0.0f, 4.5f, 0.0f,
+			0.0f, 7.5f, 0.0f
 		};
 
 		jointVerts = CreateVAO("sphereWithNormals.obj", 1, jointOffsets);
@@ -192,8 +192,8 @@ private:
 
 		vector<GLfloat> armOffsets =
 		{
-			0.0f, 5.0f, 0.0f,
-			0.0f, 7.0f, 0.0f
+			0.0f, 3.0f, 0.0f,
+			0.0f, 6.0f, 0.0f
 		};
 
 		armVerts = CreateVAO("cylinderWithNormals.obj", 2, armOffsets);
@@ -218,13 +218,6 @@ private:
 
 	static void DrawObject(GLuint vertexArrayID, GLuint vertexBuffer, int numObjects, int vertices, float angle, GLfloat color1, GLfloat color2, GLfloat color3)
 	{
-		axis = { 0.0, 1.0, 0.0 };
-		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
-
-		MVP *= Rotation;
-
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(2);
 
@@ -235,6 +228,16 @@ private:
 
 		glUniform3f(color, color1, color2, color3);
 
+		if (angle != 0.0f)
+		{
+			axis = { 1.0, 0.0, 0.0 };
+			Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
+			MVP = MVPOrig * Rotation;
+		}
+		else
+			MVP = MVPOrig;
+
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glDrawArraysInstanced(GL_TRIANGLES, 0, vertices / 3, numObjects);
 	}
 
@@ -245,7 +248,6 @@ private:
 		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
 
 		MVP = Projection * View * Model * Rotation;
-
 		glutPostRedisplay();
 	}
 
@@ -268,7 +270,7 @@ private:
 		delete title;
 		rotationAngle += 1.0f;
 		frameCount = 0;
-		glutTimerFunc(250, TimerFunction, 1);
+		glutTimerFunc(1000, TimerFunction, 1);
 	}
 
 	int CreateVAO(string objectFilename, int objectNumber, vector<GLfloat> offsets)
