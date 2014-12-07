@@ -21,7 +21,6 @@ static int headVerts;
 static int fieldVerts;
 static int jointVerts;
 static int armVerts;
-static float rotationAngle;
 
 static GLuint programID;
 static GLuint MatrixID;
@@ -36,7 +35,6 @@ static mat4 MVPOrig;
 static mat4 Projection;
 static mat4 View;
 static mat4 Model;
-
 static mat4 Rotation;
 static vec3 axis;
 static float angle = 0;
@@ -246,7 +244,6 @@ private:
 		angle = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * 45;  // X° per second
 		axis = { 0.0, 1.0, 0.0 };
 		Rotation = glm::rotate(glm::mat4(1.0f), angle, axis);
-
 		MVP = Projection * View * Model * Rotation;
 		glutPostRedisplay();
 	}
@@ -268,7 +265,6 @@ private:
 		}
 		glutSetWindowTitle(title);
 		delete title;
-		rotationAngle += 1.0f;
 		frameCount = 0;
 		glutTimerFunc(1000, TimerFunction, 1);
 	}
